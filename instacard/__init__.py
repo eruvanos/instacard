@@ -35,10 +35,10 @@ def create_app():
     @app.route('/<username>/<media_id>/skip')
     def skip(username, media_id):
         if not repo.check_done(username, media_id):
-            logger.info(f'skip {username}, {media_id}')
+            logger.info('skip %s, %s' % (username, media_id))
             repo.processed(username, media_id, True)
         else:
-            logger.warning(f'already processed {username}, {media_id}')
+            logger.warning('already processed %s, %s' % (username, media_id))
         return redirect(url_for('posts', username=username))
 
     @app.route('/<username>/<media_id>/send_postcard')
@@ -47,10 +47,10 @@ def create_app():
             userinfo = insta.get_user_info(username)
             postinfo = insta.post(media_id)
             lobadapter.send_postcard(userinfo, postinfo, settings.default_address)
-            logger.info(f'send_postcard {username}, {media_id}')
+            logger.info('send_postcard %s, %s' % (username, media_id))
             repo.processed(username, postinfo.media_id, False)
         else:
-            logger.warning(f'already processed {username}, {media_id}')
+            logger.warning('already processed %s, %s' % (username, media_id))
         return redirect(url_for('posts', username=username))
 
     return app

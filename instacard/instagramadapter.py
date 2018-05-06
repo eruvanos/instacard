@@ -27,7 +27,7 @@ class InstagramAdapter:
 
     def get_user_info(self, username: str) -> Userinfo:
         if not self.api.searchUsername(username):
-            logger.warning(f'Could not find user {username}.')
+            logger.warning('Could not find user %s.' % username)
             return None
         user_id = self.api.LastJson['user']['pk']
         fullname = self.api.LastJson['user']['full_name']

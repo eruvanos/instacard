@@ -15,12 +15,12 @@ def _location_pic(location):
     if location:
         lat, lng = location['lat'], location['lng']
         query = urlencode(dict(
-            center=f"{lat},{lng}",
-            markers=f"color:red|{lat},{lng}",
+            center="%s,%s" % (lat, lng),
+            markers="color:red|%s,%s" % (lat, lng),
             zoom=7,
             size="500x500"
         ))
-        return f"https://maps.googleapis.com/maps/api/staticmap?{query}"
+        return "https://maps.googleapis.com/maps/api/staticmap?%s" % query
     else:
         return 'https://instagram-brand.com/wp-content/uploads/2016/11/app-icon2.png'
 
