@@ -1,0 +1,5 @@
+lob==3.3.0
+InstagramApi==1.0.2
+arrow==0.12.1
+flask==1.0.2
+tinydb==3.9.0

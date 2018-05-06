@@ -1,0 +1,77 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href='https://fonts.googleapis.com/css?family=Lato:400' rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+            width: 6.25in;
+            height: 4.25in;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* do not put text outside of the safe area */
+        #safe-area {
+            position: absolute;
+            width: 5.875in;
+            height: 3.875in;
+            left: 0.1875in;
+            top: 0.1875in;
+            text-align: center;
+
+            border: solid black 1px;
+        }
+
+        .message {
+            position: absolute;
+            width: 2.2in;
+            height: 2in;
+            top: 1.4in;
+            left: .25in;
+            font-family: 'Lato';
+            font-weight: 400;
+            font-size: .122in;
+            text-align: left;
+        }
+
+        .title {
+            font-family: 'DragonIsComing';
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+<div id="safe-area">
+    <h1 class="title"></h1>
+</div>
+</body>
+</html>
+
+
+<html>
+
+<!-- do not put text outside of the safe area -->
+<div id="safe-area">
+
+    <!-- your logo here! -->
+    <h1 class="title"> Post von {{ name }}</h1>
+    <p style="text-align: center"> {{ timestamp }}</p>
+
+    <div class="message">
+        <p style="padding-bottom: 0.8in">
+            <b>{{ capture }}</b>
+        </p>
+        <p style="font-size: xx-small">
+            https://www.instagram.com/p/{{ code }}/
+        </p>
+        <p style="font-size: xx-small">
+            PS: Dies ist eine automatisch generierte Postkarte.
+        </p>
+    </div>
+
+</div>
+
+
+</html>
