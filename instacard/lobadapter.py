@@ -27,11 +27,9 @@ def _location_pic(location):
         return 'https://instagram-brand.com/wp-content/uploads/2016/11/app-icon2.png'
 
 
-
-
 def send_postcard(user: Userinfo, post: Postinfo, address: Address):
     front = render_front(post, user)
-    back = render_back(post, time_str, user)
+    back = render_back(post, user)
 
     lob.Postcard.create(
         to_address={
