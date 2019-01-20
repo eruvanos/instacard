@@ -1,5 +1,5 @@
-lob==*
-InstagramApi==*
-arrow==*
-flask==*
-tinydb==*
+lob
+InstagramApi
+arrow
+flask
+tinydb
