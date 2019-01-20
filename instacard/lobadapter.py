@@ -5,6 +5,7 @@ import lob
 from flask import render_template
 
 from instacard.model import Userinfo, Address, Postinfo
+from settings import GOOGLE_API_KEY
 
 
 def init(api_key):
@@ -18,29 +19,19 @@ def _location_pic(location):
             center="%s,%s" % (lat, lng),
             markers="color:red|%s,%s" % (lat, lng),
             zoom=7,
-            size="500x500"
+            size="500x500",
+            key=GOOGLE_API_KEY
         ))
         return "https://maps.googleapis.com/maps/api/staticmap?%s" % query
     else:
         return 'https://instagram-brand.com/wp-content/uploads/2016/11/app-icon2.png'
 
 
+
+
 def send_postcard(user: Userinfo, post: Postinfo, address: Address):
-    utc = arrow.get(post.taken_at)
-    local = utc.to('Europe/Berlin')
-    time_str = local.format(fmt='dddd, DD.MM.YYYY', locale='de_de')
-
-    front = render_template('postcard/front.html',
-                            image1=post.image,
-                            image2=_location_pic(post.location),
-                            image3=user.image,
-                            )
-
-    back = render_template('postcard/back.html',
-                           name=user.fullname,
-                           code=post.code,
-                           timestamp=time_str,
-                           )
+    front = render_front(post, user)
+    back = render_back(post, time_str, user)
 
     lob.Postcard.create(
         to_address={
@@ -55,3 +46,23 @@ def send_postcard(user: Userinfo, post: Postinfo, address: Address):
         back=back,
         merge_variables=dict()
     )
+
+
+def render_back(post, user):
+    utc = arrow.get(post.taken_at)
+    local = utc.to('Europe/Berlin')
+    time_str = local.format(fmt='dddd, DD.MM.YYYY', locale='de_de')
+
+    return render_template('postcard/back.html',
+                           name=user.fullname,
+                           code=post.code,
+                           timestamp=time_str,
+                           )
+
+
+def render_front(post, user):
+    return render_template('postcard/front.html',
+                           image1=post.image,
+                           image2=_location_pic(post.location),
+                           image3=user.image,
+                           )

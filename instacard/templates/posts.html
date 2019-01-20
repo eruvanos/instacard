@@ -10,6 +10,18 @@
           integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 
     <title>Hello, world!</title>
+
+    <style>
+        .back-link {
+            position: absolute;
+            right: 7px;
+            bottom: 80px;
+            width: 100%;
+            text-align: right;
+            color: white;
+            text-shadow: 0px 0px 10px black;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -21,12 +33,20 @@
         {% for post in posts %}
             <div class="col col-xs-12 col-md-6 col-lg-4">
                 <div class="card">
-                    <img class="card-img-top" src="{{ post['image'] }}">
+                    <a href="{{ url_for('front', username=userinfo.username, media_id=post['media_id']) }}">
+                        <img class="card-img-top" src="{{ post['image'] }}">
+                        <a href="{{ url_for('back', username=userinfo.username, media_id=post['media_id']) }}"
+                           class="back-link">
+                            Back
+                        </a>
+                    </a>
                     <div class="card-body">
-{#                        <h5 class="card-title">{{ post['location_pic'] }}</h5>#}
+                        {#                        <h5 class="card-title">{{ post['location_pic'] }}</h5>#}
                         {#                    <p class="card-text"></p>#}
-                        <a href="{{ url_for('skip', username=userinfo.username, media_id=post['media_id']) }}" class="btn btn-warning float-left">Skip</a>
-                        <a href="{{ url_for('send_postcard', username=userinfo.username, media_id=post['media_id']) }}" class="btn btn-primary float-right">Send Postcard</a>
+                        <a href="{{ url_for('skip', username=userinfo.username, media_id=post['media_id']) }}"
+                           class="btn btn-warning float-left">Skip</a>
+                        <a href="{{ url_for('send_postcard', username=userinfo.username, media_id=post['media_id']) }}"
+                           class="btn btn-primary float-right">Send Postcard</a>
                     </div>
                 </div>
             </div>

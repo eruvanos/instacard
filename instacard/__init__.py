@@ -39,6 +39,28 @@ def create_app():
                 posts.append(p)
         return render_template('posts.html', userinfo=userinfo, posts=posts)
 
+    @app.route('/<username>/<media_id>/front')
+    def front(username, media_id):
+        userinfo = insta.get_user_info(username)
+        postinfo = insta.post(media_id)
+
+        if postinfo is None:
+            logger.warning('no post found: %s, %s' % (username, media_id))
+            return 'Post not found', 404
+
+        return lobadapter.render_front(postinfo, userinfo)
+
+    @app.route('/<username>/<media_id>/back')
+    def back(username, media_id):
+        userinfo = insta.get_user_info(username)
+        postinfo = insta.post(media_id)
+
+        if postinfo is None:
+            logger.warning('no post found: %s, %s' % (username, media_id))
+            return 'Post not found', 404
+
+        return lobadapter.render_back(postinfo, userinfo)
+
     @app.route('/<username>/<media_id>/skip')
     def skip(username, media_id):
         if not repo.check_done(username, media_id):
@@ -53,6 +75,11 @@ def create_app():
         if not repo.check_done(username, media_id):
             userinfo = insta.get_user_info(username)
             postinfo = insta.post(media_id)
+
+            if postinfo is None:
+                logger.warning('no post found: %s, %s' % (username, media_id))
+                return redirect(url_for('posts', username=username))
+
             lobadapter.send_postcard(userinfo, postinfo, settings.default_address)
             logger.info('send_postcard %s, %s' % (username, media_id))
             repo.processed(username, postinfo.media_id, False)

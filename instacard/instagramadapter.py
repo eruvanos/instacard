@@ -14,6 +14,14 @@ class InstagramAdapter:
         self.api = InstagramAPI(username, password)
         self.api.login()
 
+    def fixed_mediaInfo(self, api, mediaId):
+        import json
+        data = json.dumps({'_uuid': api.uuid,
+                           '_uid': api.username_id,
+                           '_csrftoken': api.token,
+                           'media_id': mediaId})
+        return api.SendRequest('media/' + str(mediaId) + '/info/', login=api.generateSignature(data))
+
     @staticmethod
     def extract_postinfo(item: Dict) -> Postinfo:
         return Postinfo(
@@ -40,7 +48,7 @@ class InstagramAdapter:
         )
 
     def post(self, media_id):
-        if self.api.mediaInfo(media_id):
+        if self.fixed_mediaInfo(self.api, media_id):
             return self.extract_postinfo(self.api.LastJson['items'][0])
         else:
             return None
