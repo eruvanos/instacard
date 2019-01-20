@@ -1,6 +1,7 @@
 import logging
+import os
 
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request, send_from_directory
 
 import settings
 from instacard import lobadapter
@@ -21,6 +22,12 @@ def create_app():
     def index():
         usernames = repo.usernames()
         return render_template('index.html', usernames=usernames)
+
+    @app.route('/favicon.ico')
+    def fav():
+        logger.warning(f'404 Fav: {request.referrer}')
+        return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'instagram.png', mimetype='image/png')
 
     @app.route('/<username>')
     def posts(username):
