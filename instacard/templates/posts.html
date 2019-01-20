@@ -20,6 +20,29 @@
             text-align: right;
             color: white;
             text-shadow: 0px 0px 10px black;
+
+        }
+
+        #refresh {
+            display: flex;
+
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+
+            background-color: darkseagreen;
+        }
+
+        #refresh img {
+            display: block;
+            width: 60%;
+            height: 60%;
+            margin: auto;
+            transform: scaleX(-1);
         }
     </style>
 </head>
@@ -53,6 +76,10 @@
         {% endfor %}
     </div>
 </div>
+
+<a id="refresh" href="">
+    <img src="{{ url_for('static', filename='refresh.png') }}">
+</a>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
