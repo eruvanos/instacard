@@ -17,7 +17,12 @@ Create settings.py and add your credentials etc.
 from instacard.model import Address
 
 # Lob.com
-LOB_API_KEY =
+LOB_API_KEY = ''
+
+# For Google Static Maps
+GOOGLE_API_KEY = ''
+
+
 default_address = Address(
     name='',
     streetno='',
