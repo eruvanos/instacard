@@ -1,4 +1,5 @@
 import logging
+from itertools import chain
 from typing import List, Dict
 
 import arrow
@@ -23,15 +24,29 @@ class InstagramAdapter:
         return api.SendRequest('media/' + str(mediaId) + '/info/', login=api.generateSignature(data))
 
     @staticmethod
-    def extract_postinfo(item: Dict) -> Postinfo:
-        return Postinfo(
-            media_id=item['pk'],
-            code=item['code'],
-            taken_at=arrow.get(item['taken_at']),
-            image=item['image_versions2']['candidates'][0]['url'],
-            caption='',
-            location=item.get('location'),
-        )
+    def extract_postinfo(item: Dict) -> List[Postinfo]:
+        posts = []
+        if 'image_versions2' in item:
+            posts.append(Postinfo(
+                media_id=item['pk'],
+                code=item['code'],
+                taken_at=arrow.get(item['taken_at']),
+                image=item['image_versions2']['candidates'][0]['url'],
+                caption='',
+                location=item.get('location'),
+            ))
+
+        # elif 'carousel_media' in item:
+        #     for media in item['carousel_media']:
+        #         posts.append(Postinfo(
+        #             media_id=item['pk'],
+        #             code=item['code'],
+        #             taken_at=arrow.get(item['taken_at']),
+        #             image=media['image_versions2']['candidates'][0]['url'],
+        #             caption='',
+        #             location=item.get('location'),
+        #         ))
+        return posts
 
     def get_user_info(self, username: str) -> Userinfo:
         if not self.api.searchUsername(username):
@@ -56,6 +71,6 @@ class InstagramAdapter:
     def feed(self, user_id: str) -> List[Postinfo]:
         if self.api.getUserFeed(user_id):
             posts = self.api.LastJson['items']
-            return list(map(self.extract_postinfo, posts))
+            return list(chain(*map(self.extract_postinfo, posts)))
         else:
             return []
