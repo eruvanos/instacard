@@ -64,7 +64,7 @@ class InstagramAdapter:
 
     def post(self, media_id):
         if self.fixed_mediaInfo(self.api, media_id):
-            return self.extract_postinfo(self.api.LastJson['items'][0])
+            return self.extract_postinfo(self.api.LastJson['items'][0])[0]
         else:
             return None
 
