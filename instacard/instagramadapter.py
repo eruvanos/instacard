@@ -36,16 +36,17 @@ class InstagramAdapter:
                 location=item.get('location'),
             ))
 
-        # elif 'carousel_media' in item:
-        #     for media in item['carousel_media']:
-        #         posts.append(Postinfo(
-        #             media_id=item['pk'],
-        #             code=item['code'],
-        #             taken_at=arrow.get(item['taken_at']),
-        #             image=media['image_versions2']['candidates'][0]['url'],
-        #             caption='',
-        #             location=item.get('location'),
-        #         ))
+        elif 'carousel_media' in item:
+            for i, media in enumerate(item['carousel_media']):
+                posts.append(Postinfo(
+                    media_id=item['pk'],
+                    code=item['code'],
+                    taken_at=arrow.get(item['taken_at']),
+                    image=media['image_versions2']['candidates'][0]['url'],
+                    caption='',
+                    location=item.get('location'),
+                    carousel_index=i
+                ))
         return posts
 
     def get_user_info(self, username: str) -> Userinfo:
@@ -62,9 +63,9 @@ class InstagramAdapter:
             image=pic
         )
 
-    def post(self, media_id):
+    def post(self, media_id, carousel_index=0):
         if self.fixed_mediaInfo(self.api, media_id):
-            return self.extract_postinfo(self.api.LastJson['items'][0])[0]
+            return self.extract_postinfo(self.api.LastJson['items'][0])[carousel_index]
         else:
             return None
 

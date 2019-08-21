@@ -35,14 +35,14 @@ def create_app():
         posts = []
 
         for p in insta.feed(userinfo.user_id):
-            if not repo.check_done(username, p.media_id):
+            if not repo.check_done(username, p.media_id, p.carousel_index):
                 posts.append(p)
         return render_template('posts.html', userinfo=userinfo, posts=posts)
 
-    @app.route('/<username>/<media_id>/front')
-    def front(username, media_id):
+    @app.route('/<username>/<media_id>/<int:carousel_index>/front')
+    def front(username, media_id, carousel_index):
         userinfo = insta.get_user_info(username)
-        postinfo = insta.post(media_id)
+        postinfo = insta.post(media_id, carousel_index)
 
         if postinfo is None:
             logger.warning('no post found: %s, %s' % (username, media_id))
@@ -50,10 +50,10 @@ def create_app():
 
         return lobadapter.render_front(postinfo, userinfo)
 
-    @app.route('/<username>/<media_id>/back')
-    def back(username, media_id):
+    @app.route('/<username>/<media_id>/<int:carousel_index>/back')
+    def back(username, media_id, carousel_index):
         userinfo = insta.get_user_info(username)
-        postinfo = insta.post(media_id)
+        postinfo = insta.post(media_id, carousel_index)
 
         if postinfo is None:
             logger.warning('no post found: %s, %s' % (username, media_id))
@@ -61,20 +61,20 @@ def create_app():
 
         return lobadapter.render_back(postinfo, userinfo)
 
-    @app.route('/<username>/<media_id>/skip')
-    def skip(username, media_id):
-        if not repo.check_done(username, media_id):
+    @app.route('/<username>/<media_id>/<int:carousel_index>/skip')
+    def skip(username, media_id, carousel_index):
+        if not repo.check_done(username, media_id, carousel_index):
             logger.info('skip %s, %s' % (username, media_id))
-            repo.processed(username, media_id, True)
+            repo.processed(username, media_id, carousel_index, True)
         else:
             logger.warning('already processed %s, %s' % (username, media_id))
         return redirect(url_for('posts', username=username))
 
-    @app.route('/<username>/<media_id>/send_postcard')
-    def send_postcard(username, media_id):
-        if not repo.check_done(username, media_id):
+    @app.route('/<username>/<media_id>/<int:carousel_index>/send_postcard')
+    def send_postcard(username, media_id, carousel_index):
+        if not repo.check_done(username, media_id, carousel_index):
             userinfo = insta.get_user_info(username)
-            postinfo = insta.post(media_id)
+            postinfo = insta.post(media_id, carousel_index)
 
             if postinfo is None:
                 logger.warning('no post found: %s, %s' % (username, media_id))
@@ -82,7 +82,7 @@ def create_app():
 
             lobadapter.send_postcard(userinfo, postinfo, settings.default_address)
             logger.info('send_postcard %s, %s' % (username, media_id))
-            repo.processed(username, postinfo.media_id, False)
+            repo.processed(username, postinfo.media_id, carousel_index, False)
         else:
             logger.warning('already processed %s, %s' % (username, media_id))
         return redirect(url_for('posts', username=username))

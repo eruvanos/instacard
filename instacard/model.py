@@ -1,4 +1,5 @@
 from collections import namedtuple
+from dataclasses import dataclass
 
 Userinfo = namedtuple('Userinfo', [
     'user_id',
@@ -14,11 +15,13 @@ Address = namedtuple('Address', [
     'zip',
     'country'
 ])
-Postinfo = namedtuple('Postinfo', [
-    'media_id',
-    'code',
-    'taken_at',
-    'image',
-    'caption',
-    'location',
-])
+
+@dataclass
+class Postinfo:
+    media_id: str
+    code: str
+    taken_at: str
+    image: str
+    caption: str
+    location: str
+    carousel_index: int = 0

@@ -56,9 +56,9 @@
         {% for post in posts %}
             <div class="col col-xs-12 col-md-6 col-lg-4">
                 <div class="card">
-                    <a href="{{ url_for('front', username=userinfo.username, media_id=post['media_id']) }}">
+                    <a href="{{ url_for('front', username=userinfo.username, media_id=post['media_id'], carousel_index=post['carousel_index']) }}">
                         <img class="card-img-top" src="{{ post['image'] }}">
-                        <a href="{{ url_for('back', username=userinfo.username, media_id=post['media_id']) }}"
+                        <a href="{{ url_for('back', username=userinfo.username, media_id=post['media_id'], carousel_index=post['carousel_index']) }}"
                            class="back-link">
                             Back
                         </a>
@@ -66,9 +66,9 @@
                     <div class="card-body">
                         {#                        <h5 class="card-title">{{ post['location_pic'] }}</h5>#}
                         {#                    <p class="card-text"></p>#}
-                        <a href="{{ url_for('skip', username=userinfo.username, media_id=post['media_id']) }}"
+                        <a href="{{ url_for('skip', username=userinfo.username, media_id=post['media_id'], carousel_index=post['carousel_index']) }}"
                            class="btn btn-warning float-left">Skip</a>
-                        <a href="{{ url_for('send_postcard', username=userinfo.username, media_id=post['media_id']) }}"
+                        <a href="{{ url_for('send_postcard', username=userinfo.username, media_id=post['media_id'], carousel_index=post['carousel_index']) }}"
                            class="btn btn-primary float-right">Send Postcard</a>
                     </div>
                 </div>

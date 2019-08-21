@@ -7,9 +7,10 @@ def _now():
 
 
 class Post:
-    def __init__(self, username, media_id, processed, skipped):
+    def __init__(self, username, media_id, carousel_index, processed, skipped):
         self.username = username
         self.media_id = int(media_id)
+        self.carousel_index = carousel_index
         self.skipped = skipped
         self.processed = processed
 
@@ -21,6 +22,7 @@ class Post:
         return Post(
             d['username'],
             d['media_id'],
+            d.get('carousel_index', 0),
             d['skipped'],
             d['processed'],
         )
@@ -33,12 +35,13 @@ class TinyRepo:
     def posts(self, username):
         return self.table.search(Query().username == username)
 
-    def processed(self, username, media_id, skipped):
+    def processed(self, username, media_id, carousel_index: int, skipped):
         media_id = int(media_id)
 
         post = Post(
             username,
             media_id,
+            carousel_index,
             skipped,
             _now()
         )
@@ -58,8 +61,13 @@ class TinyRepo:
         posts = self.table.all()
         return set(map(lambda p: p['username'], posts))
 
-    def check_done(self, username, media_id):
+    def check_done(self, username, media_id, carousel_index):
         media_id = int(media_id)
 
         q = Query()
-        return self.table.contains((q.username == username) & (q.media_id == media_id))
+        images = self.table.search((q.username == username) & (q.media_id == media_id))
+        for image in images:
+            if image.get('carousel_index', 0) == carousel_index:
+                return True
+        else:
+            return False
